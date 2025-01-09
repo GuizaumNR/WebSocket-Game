@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle do Cubo</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #2e2e2e;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    .control-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .btn-row {
+      display: flex;
+    }
+
+    button {
+      width: 80px;
+      height: 80px;
+      margin: 5px;
+      background-color: #555;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:active {
+      background-color: #777;
+    }
+  </style>
+</head>
+<body>
+  <h1>Controle o Cubo</h1>
+  <div class="control-buttons">
+    <div class="btn-row">
+      <button onclick="sendDirection('up')">↑</button>
+    </div>
+    <div class="btn-row">
+      <button onclick="sendDirection('left')">←</button>
+      <button onclick="sendDirection('right')">→</button>
+    </div>
+    <div class="btn-row">
+      <button onclick="sendDirection('down')">↓</button>
+    </div>
+  </div>
+
+  <script>
+    const socket = new WebSocket('ws://192.168.1.34:8080');
+    function sendDirection(direction) {
+      socket.send(direction);
+    }
+  </script>
+</body>
+</html>
