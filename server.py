@@ -2,11 +2,16 @@ import asyncio
 import websockets
 
 async def handler(websocket, path):
+    print(f"Connection established with {websocket.remote_address}")
     async for message in websocket:
-        print(f"Movimento recebido: {message}")
-        await websocket.send(message)
+        print(f"Message received: {message}")
+        await websocket.send(f"Echo: {message}")
 
-start_server = websockets.serve(handler, "0.0.0.0", 8080)
+async def main():
+    start_server = websockets.serve(handler, "0.0.0.0", 8080)
+    async with start_server:
+        print("Server started on ws://0.0.0.0:8080")
+        await asyncio.Future()  # Run forever
 
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+if __name__ == "__main__":
+    asyncio.run(main())
