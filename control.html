@@ -58,9 +58,26 @@
   </div>
 
   <script>
-    const socket = new WebSocket('ws://192.168.1.34:8080');
+    const socket = new WebSocket('wss://websocket-game-6qsc.onrender.com');
+
+    socket.onopen = () => {
+      console.log('WebSocket conectado!');
+    };
+
+    socket.onerror = (error) => {
+      console.error('Erro no WebSocket:', error);
+    };
+
+    socket.onclose = () => {
+      console.warn('WebSocket desconectado.');
+    };
+
     function sendDirection(direction) {
-      socket.send(direction);
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(direction);
+      } else {
+        console.warn('WebSocket não está conectado.');
+      }
     }
   </script>
 </body>

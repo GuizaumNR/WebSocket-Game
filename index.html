@@ -77,7 +77,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script>
-    // Variáveis de controle
     const player = document.getElementById('player');
     let posX = 0;
     let posY = 0;
@@ -102,41 +101,36 @@
           console.warn('Direção desconhecida:', direction);
           break;
       }
-      // Atualiza a posição do player
       player.style.top = posY + 'px';
       player.style.left = posX + 'px';
     }
 
-    // Gerar QR Code para o controle
+    // Gerar QR Code
     const controlUrl = `https://jogodocubo.netlify.app/control.html`;
     QRCode.toCanvas(document.getElementById('qrcode'), controlUrl, function (error) {
       if (error) console.error('Erro ao gerar QR Code:', error);
     });
 
     // Comunicação WebSocket
-    const socket = new WebSocket('wss://websocket-game-6qsc.onrender.com'); // URL do servidor WebSocket na Render
+    const socket = new WebSocket('wss://websocket-game-6qsc.onrender.com');
 
-    // Quando o WebSocket estiver conectado
     socket.onopen = () => {
       console.log('WebSocket conectado!');
     };
 
-    // Receber mensagens do WebSocket
     socket.onmessage = (event) => {
       try {
-        const direction = event.data.trim(); // Remove espaços extras
-        move(direction); // Move o player com base na mensagem recebida
+        const direction = event.data.trim();
+        move(direction);
       } catch (error) {
-        console.error('Erro ao processar mensagem do WebSocket:', error);
+        console.error('Erro ao processar mensagem:', error);
       }
     };
 
-    // Tratamento de erro no WebSocket
     socket.onerror = (error) => {
       console.error('Erro no WebSocket:', error);
     };
 
-    // Quando o WebSocket for fechado
     socket.onclose = () => {
       console.warn('WebSocket desconectado.');
     };
