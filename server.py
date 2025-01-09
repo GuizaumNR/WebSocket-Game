@@ -1,17 +1,35 @@
 import asyncio
 import websockets
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
 
-async def handler(websocket, path):
-    print(f"Connection established with {websocket.remote_address}")
+# Servidor para Health Check
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/healthz":
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+def start_health_check_server():
+    server = HTTPServer(("0.0.0.0", 8000), HealthCheckHandler)
+    server.serve_forever()
+
+# Servidor WebSocket
+async def websocket_handler(websocket):
     async for message in websocket:
-        print(f"Message received: {message}")
         await websocket.send(f"Echo: {message}")
 
 async def main():
-    start_server = websockets.serve(handler, "0.0.0.0", 8080)
-    async with start_server:
-        print("Server started on ws://0.0.0.0:8080")
-        await asyncio.Future()  # Run forever
+    # Inicia o servidor WebSocket
+    websocket_server = websockets.serve(websocket_handler, "0.0.0.0", 8080)
+    await websocket_server
 
-if __name__ == "__main__":
-    asyncio.run(main())
+# Inicia o Health Check em uma thread separada
+threading.Thread(target=start_health_check_server, daemon=True).start()
+
+# Inicia o servidor WebSocket
+asyncio.run(main())
