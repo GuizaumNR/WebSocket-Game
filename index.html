@@ -77,8 +77,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script>
-     // Variáveis de controle
-     const player = document.getElementById('player');
+    // Variáveis de controle
+    const player = document.getElementById('player');
     let posX = 0;
     let posY = 0;
 
@@ -108,13 +108,13 @@
     }
 
     // Gerar QR Code para o controle
-    const controlUrl = `http://192.168.1.34:5500/control.html`; // Substitua pelo IP correto
+    const controlUrl = `https://jogodocubo.netlify.app/control.html`;
     QRCode.toCanvas(document.getElementById('qrcode'), controlUrl, function (error) {
       if (error) console.error('Erro ao gerar QR Code:', error);
     });
 
     // Comunicação WebSocket
-    const socket = new WebSocket('ws://192.168.1.34:8080'); // Substitua pelo IP correto
+    const socket = new WebSocket('wss://websocket-game-6qsc.onrender.com'); // URL do servidor WebSocket na Render
 
     // Quando o WebSocket estiver conectado
     socket.onopen = () => {
